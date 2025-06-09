@@ -1,0 +1,19 @@
+.auth-page {
+    background: white;
+    padding: 2rem;
+    margin: 5rem auto;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.auth-page h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.auth-message {
+    text-align: center;
+    color: #e53935;
+    margin-top: 1rem;
+}

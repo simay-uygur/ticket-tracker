@@ -1,18 +1,23 @@
 version: "3.9"
 
 services:
+
   postgres:
     image: postgres:15
     container_name: concert_postgres
     restart: always
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: concertdb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - ticketnet
 
   redis:
     image: redis:7
@@ -20,31 +25,53 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    networks:
+      - ticketnet
 
   springboot-backend:
-    build: ./backend  # Spring Boot Dockerfile olmalı
-    container_name: concert_backend
+    build: ./backend
+    container_name: springboot-backend
     depends_on:
       - postgres
       - redis
+    env_file:
+      - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/concertdb
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
       - "8080:8080"
+    networks:
+      - ticketnet
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: ticket-frontend
+    ports:
+      - "5173:80"
+    networks:
+      - ticketnet
 
   scraper:
-    build: ./scraper  # Python veya Node.js scraper servisin Dockerfile'ı
+    build: ./scraper
     container_name: concert_scraper
     depends_on:
       - postgres
+    env_file:
+      - .env
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: user
-      DB_PASSWORD: password
-      DB_NAME: concertdb
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    networks:
+      - ticketnet
 
 volumes:
   pgdata:
+
+networks:
+  ticketnet:

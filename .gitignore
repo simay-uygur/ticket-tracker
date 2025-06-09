@@ -37,3 +37,4 @@ Temporary Items
 
 .idea/
 *.iml
+.env

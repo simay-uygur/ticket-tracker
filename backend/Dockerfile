@@ -1,11 +1,11 @@
-# Base image
-FROM eclipse-temurin:21-jdk-alpine
+# Use a lightweight OpenJDK image
+FROM eclipse-temurin:17-jdk-alpine
 
-# Working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy build artifacts (JAR file) — önce mvn clean package ile üretmiş olmalısın
+# Copy Maven build jar into container
 COPY target/ticket-tracker-0.0.1-SNAPSHOT.jar app.jar
 
-# Run the JAR
+# Run the jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
