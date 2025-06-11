@@ -25,7 +25,7 @@ services:
     networks:
       - ticketnet
 
-  springboot-backend:
+  backend:
     build: ./backend
     container_name: springboot-backend
     depends_on:
