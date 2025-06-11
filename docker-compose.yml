@@ -1,7 +1,4 @@
-version: "3.9"
-
 services:
-
   postgres:
     image: postgres:15
     container_name: concert_postgres
@@ -46,8 +43,7 @@ services:
       - ticketnet
 
   frontend:
-    build:
-      context: ./frontend
+    build: ./frontend
     container_name: ticket-frontend
     ports:
       - "5173:80"
